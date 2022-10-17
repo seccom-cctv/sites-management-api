@@ -1,6 +1,6 @@
 from typing import Optional, Any, Union
 from pydantic import BaseModel, EmailStr
-from building import Building
+from models.models import Building
 
 class DeviceBase(BaseModel):
     name: str

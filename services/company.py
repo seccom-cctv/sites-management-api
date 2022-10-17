@@ -1,4 +1,4 @@
-from schemas.company import *
+from schemas.company import Company, CompanyCreate
 
 from services.main import AppService, AppCRUD
 

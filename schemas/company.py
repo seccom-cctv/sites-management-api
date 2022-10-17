@@ -1,7 +1,6 @@
 from typing import Optional, Any, Union
 from pydantic import BaseModel, EmailStr
-from administrator import Administrator
-from building import Building
+from models.models import Administrator, Building
 
 class CompanyBase(BaseModel):
     name: str
@@ -14,8 +13,8 @@ class CompanyCreate(CompanyBase):
 
 class Company(CompanyBase):
     id: int
-    buildings: list[Building]
-    administrators: list[Administrator]
+    buildings: list[Any]
+    administrators: list[Any]
 
     class Config:
         orm_mode = True

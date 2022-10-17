@@ -1,6 +1,6 @@
 from typing import Optional, Any, Union
 from pydantic import BaseModel, EmailStr
-from company import Company
+from models.models import Company
 
 class AdministratorBase(BaseModel):
     name: str
