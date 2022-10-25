@@ -13,4 +13,4 @@ class Company(Base):
     email = Column(String(255), unique=True, nullable=True, index=False)
 
     buildings = relationship("Building", back_populates="company")
-    administrators = relationship("Administrator", back_populates="company")
+    managers = relationship("Manager", back_populates="company")

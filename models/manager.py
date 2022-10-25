@@ -3,8 +3,8 @@ from sqlalchemy.orm import relationship
 
 from config.database import Base
 
-class Administrator(Base):
-    __tablename__ = "administrators"
+class Manager(Base):
+    __tablename__ = "managers"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), unique=False, index=True)
@@ -13,4 +13,4 @@ class Administrator(Base):
     hashed_password = Column(String(255))
     company_id = Column(Integer, ForeignKey("companies.id"))
 
-    company = relationship("Company", back_populates="administrators")
+    company = relationship("Company", back_populates="managers")

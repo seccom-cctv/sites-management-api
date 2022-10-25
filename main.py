@@ -1,7 +1,7 @@
 from utils.app_exceptions import AppExceptionCase
 from fastapi import FastAPI
 
-from routers import company, administrator, building, device
+from routers import company, building, device, manager
 from config.database import create_tables
 
 from fastapi.exceptions import RequestValidationError
@@ -35,7 +35,7 @@ async def custom_app_exception_handler(request, e):
 
 
 app.include_router(company.router)
-app.include_router(administrator.router)
+app.include_router(manager.router)
 app.include_router(building.router)
 app.include_router(device.router)
 
