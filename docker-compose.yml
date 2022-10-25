@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: sites-management-api
+    volumes:
+      - '.:/sites-management-api'
     depends_on:
       - mysql-db
     ports:
