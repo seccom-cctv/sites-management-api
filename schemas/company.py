@@ -1,11 +1,11 @@
 from typing import Optional, Any, Union
-from pydantic import BaseModel, EmailStr
-from models.models import Administrator, Building
+from typing_extensions import Annotated
+from pydantic import BaseModel, EmailStr, Field
 
 class CompanyBase(BaseModel):
-    name: str
-    address: str
-    phone: str
+    name: Annotated[str, Field(max_length=255)]
+    address: Annotated[str, Field(max_length=255)]
+    phone: Annotated[str, Field(max_length=30)]
     email: Optional[EmailStr]
 
 class CompanyCreate(CompanyBase):
@@ -13,8 +13,6 @@ class CompanyCreate(CompanyBase):
 
 class Company(CompanyBase):
     id: int
-    buildings: list[Any]
-    administrators: list[Any]
 
     class Config:
         orm_mode = True

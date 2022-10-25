@@ -1,16 +1,14 @@
-from typing import Optional, Any, Union
-from pydantic import BaseModel, EmailStr
-from models.models import Company
+from pydantic import BaseModel, EmailStr, Field
+from typing_extensions import Annotated
 
 class AdministratorBase(BaseModel):
-    name: str
-    phone: str
+    name: Annotated[str, Field(max_length=255)]
+    phone: Annotated[str, Field(max_length=30)]
     email: EmailStr
     company_id: int
-    company: Company
 
 class AdministratorCreate(AdministratorBase):
-    password: str
+    hashed_password: str
 
 class Administrator(AdministratorBase):
     id: int

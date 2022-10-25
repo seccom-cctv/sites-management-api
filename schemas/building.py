@@ -1,19 +1,17 @@
 from typing import Optional, Any, Union
-from pydantic import BaseModel, EmailStr
-from models.models import Company, Device
+from typing_extensions import Annotated
+from pydantic import BaseModel, Field
 
 class BuildingBase(BaseModel):
-    name: str
-    address: str
+    name: Annotated[str, Field(max_length=255)]
+    address: Annotated[str, Field(max_length=255)]
     company_id: int
-    company: Company
 
 class BuildingCreate(BuildingBase):
     pass
 
 class Building(BuildingBase):
     id: int
-    devices: list[Device]
 
     class Config:
         orm_mode = True
