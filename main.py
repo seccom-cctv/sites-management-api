@@ -1,5 +1,6 @@
 from utils.app_exceptions import AppExceptionCase
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 
 from routers import company, building, device, manager
 from config.database import create_tables
@@ -41,4 +42,4 @@ app.include_router(device.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return RedirectResponse(url='/docs')

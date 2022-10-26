@@ -1,4 +1,3 @@
-from email.policy import default
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from utils.custom_types import JSONEncodedDict

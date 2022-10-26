@@ -1,4 +1,4 @@
-from typing import Optional, Any, Union
+from typing import Optional
 from typing_extensions import Annotated
 from pydantic import BaseModel, EmailStr, Field
 
