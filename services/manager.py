@@ -48,6 +48,8 @@ class ManagerCRUD(AppCRUD):
                     name = manager.name,
                     phone = manager.phone,
                     email = manager.email,
+                    permissions = manager.permissions,
+                    preferences = manager.preferences,
                     hashed_password = manager.hashed_password,
                     company_id = manager.company_id
                     )
@@ -63,8 +65,10 @@ class ManagerCRUD(AppCRUD):
         if m:
             m.name = manager.name,
             m.phone = manager.phone,
-            m.email = manager.email
-            m.hashed_password = manager.hashed_password
+            m.email = manager.email,
+            m.permissions = manager.permissions,
+            m.preferences = manager.preferences,
+            m.hashed_password = manager.hashed_password,
             m.company_id = manager.company_id
             self.db.commit()
             return m

@@ -1,5 +1,7 @@
+from email.policy import default
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
+from utils.custom_types import JSONEncodedDict
 
 from config.database import Base
 
@@ -11,6 +13,8 @@ class Manager(Base):
     phone = Column(String(30), unique=True, index=False)
     email = Column(String(255), unique=True, index=False)
     hashed_password = Column(String(255))
+    preferences = Column(JSONEncodedDict(), default={"notifications": {"from": ["alarms", "cameras"], "to": ["email", "sms"]}})
+    permissions = Column(Integer, default=0)
     company_id = Column(Integer, ForeignKey("companies.id"))
 
     company = relationship("Company", back_populates="managers")
