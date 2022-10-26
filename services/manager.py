@@ -8,24 +8,24 @@ from utils.service_result import ServiceResult
 
 class ManagerService(AppService):
     def get_manager(self, id: int) -> ServiceResult:
-        manager = ManagerCRUD(self.db).get_manager(id)
-        if not manager:
-            return ServiceResult(AppException.Get({"id": id}))
-        #if not manager.public:
+        result = ManagerCRUD(self.db).get_manager(id)
+        if not isinstance(result, Manager):
+            return ServiceResult(AppException.Get(result))
+        #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
-        return ServiceResult(manager)
+        return ServiceResult(result)
 
     def create_manager(self, manager: ManagerCreate) -> ServiceResult:
-        manager = ManagerCRUD(self.db).create_manager(manager)
-        if not manager:
-            return ServiceResult(AppException.Create())
-        return ServiceResult(manager)
+        result = ManagerCRUD(self.db).create_manager(manager)
+        if not isinstance(result, Manager):
+            return ServiceResult(AppException.Create(result))
+        return ServiceResult(result)
 
     def update_manager(self, id: int, manager: ManagerCreate) -> ServiceResult:
-        manager = ManagerCRUD(self.db).update_manager(id, manager)
-        if not manager:
-            return ServiceResult(AppException.Update())
-        return ServiceResult(manager)
+        result = ManagerCRUD(self.db).update_manager(id, manager)
+        if not isinstance(result, Manager):
+            return ServiceResult(AppException.Update(result))
+        return ServiceResult(result)
 
     def delete_manager(self, id: int) -> ServiceResult:
         result = ManagerCRUD(self.db).delete_manager(id)

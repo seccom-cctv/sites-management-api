@@ -8,24 +8,24 @@ from utils.service_result import ServiceResult
 
 class BuildingService(AppService):
     def get_building(self, id: int) -> ServiceResult:
-        building = BuildingCRUD(self.db).get_building(id)
-        if not building:
-            return ServiceResult(AppException.Get({"id": id}))
-        #if not building.public:
+        result = BuildingCRUD(self.db).get_building(id)
+        if not isinstance(result, Building):
+            return ServiceResult(AppException.Get(result))
+        #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
-        return ServiceResult(building)
+        return ServiceResult(result)
 
     def create_building(self, building: BuildingCreate) -> ServiceResult:
-        building = BuildingCRUD(self.db).create_building(building)
-        if not building:
-            return ServiceResult(AppException.Create())
-        return ServiceResult(building)
+        result = BuildingCRUD(self.db).create_building(building)
+        if not isinstance(result, Building):
+            return ServiceResult(AppException.Create(result))
+        return ServiceResult(result)
 
     def update_building(self, id: int, building: BuildingCreate) -> ServiceResult:
-        building = BuildingCRUD(self.db).update_building(id, building)
-        if not building:
-            return ServiceResult(AppException.Update())
-        return ServiceResult(building)
+        result = BuildingCRUD(self.db).update_building(id, building)
+        if not isinstance(result, Building):
+            return ServiceResult(AppException.Update(result))
+        return ServiceResult(result)
 
     def delete_building(self, id: int) -> ServiceResult:
         result = BuildingCRUD(self.db).delete_building(id)
