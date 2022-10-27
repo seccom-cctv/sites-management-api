@@ -19,7 +19,6 @@ workflows:
   build-and-test:
     jobs:
       - aws-ecr/build-and-push-image:
-        region: ${AWS_REGION}
-        repo: ${AWS_ECR_ACCOUNT_URL}/${CIRCLE_PROJECT_REPONAME}
-        tag: ${CIRCLE_BUILD_NUM}
-                
+          region: ${AWS_REGION}
+          repo: ${AWS_ECR_ACCOUNT_URL}/${CIRCLE_PROJECT_REPONAME}
+          tag: ${CIRCLE_BUILD_NUM}
