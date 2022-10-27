@@ -1,10 +1,10 @@
 from sqlalchemy.exc import SQLAlchemyError
-from schemas.company import CompanyCreate
-from utils.app_exceptions import AppException
+from app.schemas.company import CompanyCreate
+from app.utils.app_exceptions import AppException
 
-from services.main import AppService, AppCRUD
-from models.company import Company
-from utils.service_result import ServiceResult
+from app.services.main import AppService, AppCRUD
+from app.models.company import Company
+from app.utils.service_result import ServiceResult
 
 
 class CompanyService(AppService):

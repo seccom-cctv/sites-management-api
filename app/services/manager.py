@@ -1,9 +1,9 @@
-from schemas.manager import ManagerCreate
-from utils.app_exceptions import AppException
+from app.schemas.manager import ManagerCreate
+from app.utils.app_exceptions import AppException
 
-from services.main import AppService, AppCRUD
-from models.manager import Manager
-from utils.service_result import ServiceResult
+from app.services.main import AppService, AppCRUD
+from app.models.manager import Manager
+from app.utils.service_result import ServiceResult
 
 
 class ManagerService(AppService):

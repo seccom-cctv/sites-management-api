@@ -1,24 +1,24 @@
-from utils.app_exceptions import AppExceptionCase
+from app.utils.app_exceptions import AppExceptionCase
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from routers import company, building, device, manager
-from config.database import create_tables
+from app.routers import company, building, device, manager
+from app.config.database import create_tables
 
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from utils.request_exceptions import (
+from app.utils.request_exceptions import (
     http_exception_handler,
     request_validation_exception_handler,
 )
-from utils.app_exceptions import app_exception_handler
-
-create_tables()
-
+from app.utils.app_exceptions import app_exception_handler
 
 app = FastAPI()
 
+@app.on_event("startup")
+async def startup_event():
+    create_tables()
 
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, e):

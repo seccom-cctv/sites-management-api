@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 
-from services.company import CompanyService
-from schemas.company import Company, CompanyCreate
+from app.services.company import CompanyService
+from app.schemas.company import Company, CompanyCreate
 
-from utils.service_result import handle_result
+from app.utils.service_result import handle_result
 
-from config.database import get_db
+from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/company",

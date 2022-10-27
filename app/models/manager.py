@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from utils.custom_types import JSONEncodedDict
+from app.utils.custom_types import JSONEncodedDict
 
-from config.database import Base
+from app.config.database import Base
 
 class Manager(Base):
     __tablename__ = "managers"

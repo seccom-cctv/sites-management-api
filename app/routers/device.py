@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 
-from services.device import DeviceService
-from schemas.device import Device, DeviceCreate
+from app.services.device import DeviceService
+from app.schemas.device import Device, DeviceCreate
 
-from utils.service_result import handle_result
+from app.utils.service_result import handle_result
 
-from config.database import get_db
+from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/device",

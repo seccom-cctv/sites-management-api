@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 
-from services.manager import ManagerService
-from schemas.manager import Manager, ManagerCreate
+from app.services.manager import ManagerService
+from app.schemas.manager import Manager, ManagerCreate
 
-from utils.service_result import handle_result
+from app.utils.service_result import handle_result
 
-from config.database import get_db
+from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/manager",

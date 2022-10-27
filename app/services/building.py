@@ -1,9 +1,9 @@
-from schemas.building import BuildingCreate
-from utils.app_exceptions import AppException
+from app.schemas.building import BuildingCreate
+from app.utils.app_exceptions import AppException
 
-from services.main import AppService, AppCRUD
-from models.building import Building
-from utils.service_result import ServiceResult
+from app.services.main import AppService, AppCRUD
+from app.models.building import Building
+from app.utils.service_result import ServiceResult
 
 
 class BuildingService(AppService):

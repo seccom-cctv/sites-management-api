@@ -1,9 +1,9 @@
-from schemas.device import DeviceCreate
-from utils.app_exceptions import AppException
+from app.schemas.device import DeviceCreate
+from app.utils.app_exceptions import AppException
 
-from services.main import AppService, AppCRUD
-from models.device import Device
-from utils.service_result import ServiceResult
+from app.services.main import AppService, AppCRUD
+from app.models.device import Device
+from app.utils.service_result import ServiceResult
 
 
 class DeviceService(AppService):
