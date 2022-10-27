@@ -16,7 +16,7 @@ from app.utils.app_exceptions import app_exception_handler
 
 app = FastAPI()
 
-@app.on_event("startup")
+@app.on_event("startup") # THIS IS VERY IMPORTANT! If we run create_tables outside this def pytest will not work!
 async def startup_event():
     create_tables()
 
