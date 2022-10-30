@@ -1,3 +1,4 @@
+from typing import List
 from app.schemas.device import DeviceCreate
 from app.utils.app_exceptions import AppException
 
@@ -9,7 +10,7 @@ from app.utils.service_result import ServiceResult
 class DeviceService(AppService):
     def get_device(self, id: int) -> ServiceResult:
         result = DeviceCRUD(self.db).get_device(id)
-        if not isinstance(result, Device):
+        if not isinstance(result, list):
             return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
@@ -35,13 +36,14 @@ class DeviceService(AppService):
 
 
 class DeviceCRUD(AppCRUD):
-    def get_device(self, id: int) -> Device:
-        device = self.db.query(Device).filter(Device.id == id).first()
+    def get_device(self, id: int) -> List[Device]:
+        if id:
+            devices = self.db.query(Device).filter(Device.id == id).first()
+            devices = [devices] # returns list
+        else:
+            devices = self.db.query(Device).all()
 
-        if device:
-            return device
-
-        return None
+        return devices
 
     def create_device(self, device: DeviceCreate) -> Device:
         device = Device(

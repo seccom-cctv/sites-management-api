@@ -1,3 +1,4 @@
+from typing import List, Optional
 from fastapi import APIRouter, Depends
 
 from app.services.manager import ManagerService
@@ -13,8 +14,8 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/{id}", response_model=Manager)
-async def get_manager(id: int, db: get_db = Depends()):
+@router.get("/", response_model=List[Manager])
+async def get_manager(id: Optional[int] = None, db: get_db = Depends()):
     result = ManagerService(db).get_manager(id)
     return handle_result(result)
 

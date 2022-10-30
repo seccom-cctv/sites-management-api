@@ -1,3 +1,4 @@
+from typing import List
 from app.schemas.manager import ManagerCreate
 from app.utils.app_exceptions import AppException
 
@@ -9,7 +10,7 @@ from app.utils.service_result import ServiceResult
 class ManagerService(AppService):
     def get_manager(self, id: int) -> ServiceResult:
         result = ManagerCRUD(self.db).get_manager(id)
-        if not isinstance(result, Manager):
+        if not isinstance(result, list):
             return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
@@ -35,13 +36,14 @@ class ManagerService(AppService):
 
 
 class ManagerCRUD(AppCRUD):
-    def get_manager(self, id: int) -> Manager:
-        manager = self.db.query(Manager).filter(Manager.id == id).first()
+    def get_manager(self, id: int) -> List[Manager]:
+        if id:
+            managers = self.db.query(Manager).filter(Manager.id == id).first()
+            managers = [managers] # returns list
+        else:
+            managers = self.db.query(Manager).all()
 
-        if manager:
-            return manager
-
-        return None
+        return managers
 
     def create_manager(self, manager: ManagerCreate) -> Manager:
         manager = Manager(

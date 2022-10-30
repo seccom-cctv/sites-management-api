@@ -1,3 +1,4 @@
+from typing import List, Optional
 from fastapi import APIRouter, Depends
 
 from app.services.company import CompanyService
@@ -13,8 +14,8 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/{id}", response_model=Company)
-async def get_company(id: int, db: get_db = Depends()):
+@router.get("/", response_model=List[Company])
+async def get_company(id: Optional[int] = None, db: get_db = Depends()):
     result = CompanyService(db).get_company(id)
     return handle_result(result)
 

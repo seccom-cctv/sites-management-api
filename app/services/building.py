@@ -1,3 +1,4 @@
+from typing import List
 from app.schemas.building import BuildingCreate
 from app.utils.app_exceptions import AppException
 
@@ -9,7 +10,7 @@ from app.utils.service_result import ServiceResult
 class BuildingService(AppService):
     def get_building(self, id: int) -> ServiceResult:
         result = BuildingCRUD(self.db).get_building(id)
-        if not isinstance(result, Building):
+        if not isinstance(result, list):
             return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
@@ -35,13 +36,14 @@ class BuildingService(AppService):
 
 
 class BuildingCRUD(AppCRUD):
-    def get_building(self, id: int) -> Building:
-        building = self.db.query(Building).filter(Building.id == id).first()
+    def get_building(self, id: int) -> List[Building]:
+        if id:
+            buildings = self.db.query(Building).filter(Building.id == id).first()
+            buildings = [buildings] # returns list
+        else:
+            buildings = self.db.query(Building).all()
 
-        if building:
-            return building
-
-        return None
+        return buildings
 
     def create_building(self, building: BuildingCreate) -> Building:
         building = Building(

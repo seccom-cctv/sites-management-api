@@ -5,12 +5,13 @@ from app.utils.app_exceptions import AppException
 from app.services.main import AppService, AppCRUD
 from app.models.company import Company
 from app.utils.service_result import ServiceResult
+from typing import List
 
 
 class CompanyService(AppService):
     def get_company(self, id: int) -> ServiceResult:
         result = CompanyCRUD(self.db).get_company(id)
-        if not isinstance(result, Company):
+        if not isinstance(result, list):
             return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not company.public:
             # return ServiceResult(AppException.RequiresAuth())
@@ -36,9 +37,14 @@ class CompanyService(AppService):
 
 
 class CompanyCRUD(AppCRUD):
-    def get_company(self, id: int) -> Company:
-        company = self.db.query(Company).filter(Company.id == id).first()
-        return company
+    def get_company(self, id: int) -> List[Company]:
+        if id:
+            companies = self.db.query(Company).filter(Company.id == id).first()
+            companies = [companies] # returns list
+        else:
+            companies = self.db.query(Company).all()
+
+        return companies
 
     def create_company(self, company: CompanyCreate) -> Company:
         company = Company(
