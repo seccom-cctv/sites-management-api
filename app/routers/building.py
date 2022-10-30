@@ -1,11 +1,12 @@
+from typing import Optional, List
 from fastapi import APIRouter, Depends
 
-from services.building import BuildingService
-from schemas.building import Building, BuildingCreate
+from app.services.building import BuildingService
+from app.schemas.building import Building, BuildingCreate
 
-from utils.service_result import handle_result
+from app.utils.service_result import handle_result
 
-from config.database import get_db
+from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/building",
@@ -13,8 +14,8 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/{id}", response_model=Building)
-async def get_building(id: int, db: get_db = Depends()):
+@router.get("/", response_model=List[Building])
+async def get_building(id: Optional[int] = None, db: get_db = Depends()):
     result = BuildingService(db).get_building(id)
     return handle_result(result)
 

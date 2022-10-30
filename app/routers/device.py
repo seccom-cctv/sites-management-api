@@ -1,11 +1,12 @@
+from typing import List, Optional
 from fastapi import APIRouter, Depends
 
-from services.device import DeviceService
-from schemas.device import Device, DeviceCreate
+from app.services.device import DeviceService
+from app.schemas.device import Device, DeviceCreate
 
-from utils.service_result import handle_result
+from app.utils.service_result import handle_result
 
-from config.database import get_db
+from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/device",
@@ -13,8 +14,8 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/{id}", response_model=Device)
-async def get_device(id: int, db: get_db = Depends()):
+@router.get("/", response_model=List[Device])
+async def get_device(id: Optional[int] = None, db: get_db = Depends()):
     result = DeviceService(db).get_device(id)
     return handle_result(result)
 

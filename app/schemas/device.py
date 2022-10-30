@@ -1,6 +1,5 @@
-from typing import Optional, Any, Union
 from typing_extensions import Annotated
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 
 class DeviceBase(BaseModel):
     name: Annotated[str, Field(max_length=255)]

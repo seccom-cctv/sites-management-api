@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from config.database import Base
+from app.config.database import Base
 
 class Company(Base):
     __tablename__ = "companies"
@@ -13,4 +13,4 @@ class Company(Base):
     email = Column(String(255), unique=True, nullable=True, index=False)
 
     buildings = relationship("Building", back_populates="company")
-    administrators = relationship("Administrator", back_populates="company")
+    managers = relationship("Manager", back_populates="company")
