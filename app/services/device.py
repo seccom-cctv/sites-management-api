@@ -10,7 +10,7 @@ class DeviceService(AppService):
     def get_device(self, id: int) -> ServiceResult:
         result = DeviceCRUD(self.db).get_device(id)
         if not isinstance(result, Device):
-            return ServiceResult(AppException.Get(result))
+            return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
         return ServiceResult(result)

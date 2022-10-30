@@ -11,7 +11,7 @@ class CompanyService(AppService):
     def get_company(self, id: int) -> ServiceResult:
         result = CompanyCRUD(self.db).get_company(id)
         if not isinstance(result, Company):
-            return ServiceResult(AppException.Get(result))
+            return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not company.public:
             # return ServiceResult(AppException.RequiresAuth())
         return ServiceResult(result)

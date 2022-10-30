@@ -10,7 +10,7 @@ class BuildingService(AppService):
     def get_building(self, id: int) -> ServiceResult:
         result = BuildingCRUD(self.db).get_building(id)
         if not isinstance(result, Building):
-            return ServiceResult(AppException.Get(result))
+            return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
         return ServiceResult(result)

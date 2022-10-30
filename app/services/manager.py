@@ -10,7 +10,7 @@ class ManagerService(AppService):
     def get_manager(self, id: int) -> ServiceResult:
         result = ManagerCRUD(self.db).get_manager(id)
         if not isinstance(result, Manager):
-            return ServiceResult(AppException.Get(result))
+            return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
         return ServiceResult(result)
