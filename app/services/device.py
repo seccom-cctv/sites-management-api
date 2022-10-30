@@ -1,31 +1,32 @@
-from schemas.device import DeviceCreate
-from utils.app_exceptions import AppException
+from typing import List
+from app.schemas.device import DeviceCreate
+from app.utils.app_exceptions import AppException
 
-from services.main import AppService, AppCRUD
-from models.device import Device
-from utils.service_result import ServiceResult
+from app.services.main import AppService, AppCRUD
+from app.models.device import Device
+from app.utils.service_result import ServiceResult
 
 
 class DeviceService(AppService):
     def get_device(self, id: int) -> ServiceResult:
-        device = DeviceCRUD(self.db).get_device(id)
-        if not device:
-            return ServiceResult(AppException.Get({"id": id}))
-        #if not device.public:
+        result = DeviceCRUD(self.db).get_device(id)
+        if not isinstance(result, list):
+            return ServiceResult(AppException.Get({"id_not_found": id}))
+        #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
-        return ServiceResult(device)
+        return ServiceResult(result)
 
     def create_device(self, device: DeviceCreate) -> ServiceResult:
-        device = DeviceCRUD(self.db).create_device(device)
-        if not device:
-            return ServiceResult(AppException.Create())
-        return ServiceResult(device)
+        result = DeviceCRUD(self.db).create_device(device)
+        if not isinstance(result, Device):
+            return ServiceResult(AppException.Create(result))
+        return ServiceResult(result)
 
     def update_device(self, id: int, device: DeviceCreate) -> ServiceResult:
-        device = DeviceCRUD(self.db).update_device(id, device)
-        if not device:
-            return ServiceResult(AppException.Update())
-        return ServiceResult(device)
+        result = DeviceCRUD(self.db).update_device(id, device)
+        if not isinstance(result, Device):
+            return ServiceResult(AppException.Update(result))
+        return ServiceResult(result)
 
     def delete_device(self, id: int) -> ServiceResult:
         result = DeviceCRUD(self.db).delete_device(id)
@@ -35,13 +36,14 @@ class DeviceService(AppService):
 
 
 class DeviceCRUD(AppCRUD):
-    def get_device(self, id: int) -> Device:
-        device = self.db.query(Device).filter(Device.id == id).first()
+    def get_device(self, id: int) -> List[Device]:
+        if id:
+            devices = self.db.query(Device).filter(Device.id == id).first()
+            devices = [devices] # returns list
+        else:
+            devices = self.db.query(Device).all()
 
-        if device:
-            return device
-
-        return None
+        return devices
 
     def create_device(self, device: DeviceCreate) -> Device:
         device = Device(
