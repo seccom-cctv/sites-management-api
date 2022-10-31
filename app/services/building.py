@@ -8,8 +8,8 @@ from app.utils.service_result import ServiceResult
 
 
 class BuildingService(AppService):
-    def get_building(self, id: int) -> ServiceResult:
-        result = BuildingCRUD(self.db).get_building(id)
+    def get_building(self, id: int, company_id: int) -> ServiceResult:
+        result = BuildingCRUD(self.db).get_building(id, company_id)
         if not isinstance(result, list):
             return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not result.public:
@@ -36,10 +36,13 @@ class BuildingService(AppService):
 
 
 class BuildingCRUD(AppCRUD):
-    def get_building(self, id: int) -> List[Building]:
+    def get_building(self, id: int, company_id: int) -> List[Building]:
         if id:
             buildings = self.db.query(Building).filter(Building.id == id).first()
             buildings = [buildings] # returns list
+        elif company_id:
+            buildings = self.db.query(Building).filter(Building.company_id == company_id).all()
+            print("ASDASDASDASDASDAS ", buildings)
         else:
             buildings = self.db.query(Building).all()
 

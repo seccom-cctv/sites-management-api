@@ -15,8 +15,8 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=List[Building])
-async def get_building(id: Optional[int] = None, db: get_db = Depends()):
-    result = BuildingService(db).get_building(id)
+async def get_building(id: Optional[int] = None, company_id: Optional[int] = None, db: get_db = Depends()):
+    result = BuildingService(db).get_building(id, company_id)
     return handle_result(result)
 
 @router.post("/", response_model=Building)
