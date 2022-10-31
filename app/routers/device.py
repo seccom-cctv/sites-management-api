@@ -1,3 +1,4 @@
+from optparse import Option
 from typing import List, Optional
 from fastapi import APIRouter, Depends
 
@@ -15,8 +16,8 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=List[Device])
-async def get_device(id: Optional[int] = None, db: get_db = Depends()):
-    result = DeviceService(db).get_device(id)
+async def get_device(id: Optional[int] = None, building_id: Optional[int] = None, db: get_db = Depends()):
+    result = DeviceService(db).get_device(id, building_id)
     return handle_result(result)
 
 @router.post("/", response_model=Device)

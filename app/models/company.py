@@ -8,7 +8,7 @@ class Company(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), unique=False, index=True)
-    address = Column(String(255), unique=True, index=False)
+    address = Column(String(255), unique=False, index=False)
     phone = Column(String(30), unique=True, index=False)
     email = Column(String(255), unique=True, nullable=True, index=False)
 
