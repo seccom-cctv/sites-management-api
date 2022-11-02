@@ -63,8 +63,8 @@ class DeviceCRUD(AppCRUD):
         d = self.db.query(Device).filter(Device.id == id).one()
 
         if d:
-            d.name = device.name,
-            d.type = device.type,
+            d.name = device.name
+            d.type = device.type
             d.building_id = device.building_id
             self.db.commit()
             return d

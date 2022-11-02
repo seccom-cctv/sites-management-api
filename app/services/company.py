@@ -65,9 +65,9 @@ class CompanyCRUD(AppCRUD):
     def update_company(self, id: int, company: CompanyCreate) -> Company:
         try:
             c = self.db.query(Company).filter(Company.id == id).one()
-            c.name = company.name,
-            c.address = company.address,
-            c.phone = company.phone,
+            c.name = company.name
+            c.address = company.address
+            c.phone = company.phone
             c.email = company.email
             self.db.commit()
         except SQLAlchemyError as e:

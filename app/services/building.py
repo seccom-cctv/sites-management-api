@@ -64,9 +64,9 @@ class BuildingCRUD(AppCRUD):
         b = self.db.query(Building).filter(Building.id == id).one()
 
         if b:
-            b.name = building.name,
-            b.address = building.address,
-            b.company_id = building.company_id,
+            b.name = building.name
+            b.address = building.address
+            b.company_id = building.company_id
             self.db.commit()
             return b
 

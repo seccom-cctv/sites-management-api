@@ -65,12 +65,12 @@ class ManagerCRUD(AppCRUD):
         m = self.db.query(Manager).filter(Manager.id == id).one()
 
         if m:
-            m.name = manager.name,
-            m.phone = manager.phone,
-            m.email = manager.email,
-            m.permissions = manager.permissions,
-            m.preferences = manager.preferences,
-            m.hashed_password = manager.hashed_password,
+            m.name = manager.name
+            m.phone = manager.phone
+            m.email = manager.email
+            m.permissions = manager.permissions
+            m.preferences = manager.preferences
+            m.hashed_password = manager.hashed_password
             m.company_id = manager.company_id
             self.db.commit()
             return m
