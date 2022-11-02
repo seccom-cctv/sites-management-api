@@ -57,9 +57,8 @@ def test_post_a_company(test_db):
 
 def test_update_company(test_db):
     json={
-        "id": 1,
         "name": "Company A",
-        "address": "Address X",
+        "address": "Address XYZ",
         "phone": "918276234",
         "email": "m@ua.pt"}
 
@@ -73,8 +72,6 @@ def test_update_company(test_db):
         return str(e)
     
     id = 1
-    response = client.get(f"v1/company/?id={id}")
-    print(response.json())
     response = client.put(f"v1/company/{id}",json={
         "name": "Company A",
         "address": "Address XYZ",
@@ -90,7 +87,6 @@ def test_update_company(test_db):
 
 def test_get_company(test_db):
     json={
-        "id": 1,
         "name": "Company A",
         "address": "Address X",
         "phone": "918276234",
@@ -117,7 +113,6 @@ def test_get_company(test_db):
 
 def test_delete_company(test_db):
     json={
-        "id": 1,
         "name": "Company A",
         "address": "Address X",
         "phone": "918276234",

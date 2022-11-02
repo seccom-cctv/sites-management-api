@@ -42,7 +42,6 @@ class BuildingCRUD(AppCRUD):
             buildings = [buildings] # returns list
         elif company_id:
             buildings = self.db.query(Building).filter(Building.company_id == company_id).all()
-            print("ASDASDASDASDASDAS ", buildings)
         else:
             buildings = self.db.query(Building).all()
 

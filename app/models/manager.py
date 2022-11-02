@@ -17,3 +17,7 @@ class Manager(Base):
     company_id = Column(Integer, ForeignKey("companies.id"))
 
     company = relationship("Company", back_populates="managers")
+
+    def __repr__(self):
+        return f"Manager(id={self.id}, name={self.name}, phone={self.phone}, email={self.email}, hashed_password={self.hashed_password}, preferences={self.preferences}, permissions={self.permissions}, company_id={self.company_id})"
+    
