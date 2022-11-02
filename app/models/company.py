@@ -14,3 +14,6 @@ class Company(Base):
 
     buildings = relationship("Building", back_populates="company")
     managers = relationship("Manager", back_populates="company")
+
+    def __repr__(self):
+        return f"Company(id={self.id}, name={self.name}, address={self.address}, phone={self.phone}, email={self.email})"

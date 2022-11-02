@@ -42,7 +42,6 @@ class BuildingCRUD(AppCRUD):
             buildings = [buildings] # returns list
         elif company_id:
             buildings = self.db.query(Building).filter(Building.company_id == company_id).all()
-            print("ASDASDASDASDASDAS ", buildings)
         else:
             buildings = self.db.query(Building).all()
 
@@ -64,9 +63,9 @@ class BuildingCRUD(AppCRUD):
         b = self.db.query(Building).filter(Building.id == id).one()
 
         if b:
-            b.name = building.name,
-            b.address = building.address,
-            b.company_id = building.company_id,
+            b.name = building.name
+            b.address = building.address
+            b.company_id = building.company_id
             self.db.commit()
             return b
 

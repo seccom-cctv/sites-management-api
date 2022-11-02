@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.config.database import Base, get_db
 from app.main import app
-from app.models.company import Company
+from app.models.device import Device
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -39,87 +39,103 @@ client = TestClient(app)
 
 # Testing Routers
 
-def test_post_a_company(test_db):
+def test_post_a_device(test_db):
     response = client.post(
-        "v1/company/",
+        "v1/device/",
         json={
-        "name": "Company A",
-        "address": "Address X",
-        "phone": "918276234",
-        "email": "m@ua.pt"})
+        "name": "Camera A",
+        "type": "Type X",
+        "building_id": 9})
     assert response.status_code == 200
     assert response.json() == {
         "id": 1,
-        "name": "Company A",
-        "address": "Address X",
-        "phone": "918276234",
-        "email": "m@ua.pt"}
+        "name": "Camera A",
+        "type": "Type X",
+        "building_id": 9}
 
-def test_update_company(test_db):
+def test_update_device(test_db):
     json={
-        "name": "Company A",
-        "address": "Address XYZ",
-        "phone": "918276234",
-        "email": "m@ua.pt"}
+        "name": "Camera A",
+        "type": "Type X",
+        "building_id": 9}
 
     db = next(override_get_db())
-    company = Company(**json)
+    device = Device(**json)
     try:
-        db.add(company)
+        db.add(device)
         db.commit()
-        db.refresh(company)
+        db.refresh(device)
     except SQLAlchemyError as e:
         return str(e)
     
     id = 1
-    response = client.put(f"v1/company/{id}",json={
-        "name": "Company A",
-        "address": "Address XYZ",
-        "phone": "918276635",
-        "email": "m@ua.pt"})
+    response = client.put(f"v1/device/{id}",json={
+        "name": "Camera BY",
+        "type": "Type XZ",
+        "building_id": 10})
     assert response.status_code == 200
     assert response.json() == {
         "id":1,
-        "name": "Company A",
-        "address": "Address XYZ",
-        "phone": "918276635",
-        "email": "m@ua.pt"}
+        "name": "Camera BY",
+        "type": "Type XZ",
+        "building_id": 10}
 
-def test_get_company(test_db):
+def test_get_device_by_id(test_db):
     json={
-        "name": "Company A",
-        "address": "Address X",
-        "phone": "918276234",
-        "email": "m@ua.pt"}
+        "name": "Camera A",
+        "type": "Type X",
+        "building_id": 9}
 
     db = next(override_get_db())
-    company = Company(**json)
+    device = Device(**json)
     try:
-        db.add(company)
+        db.add(device)
         db.commit()
-        db.refresh(company)
+        db.refresh(device)
     except SQLAlchemyError as e:
         return str(e)
     
     id = 1
-    response = client.get(f"v1/company/?id={id}")
+    response = client.get(f"v1/device/?id={id}")
     assert response.status_code == 200
     assert response.json() == [{
         "id": 1,
-        "name": "Company A",
-        "address": "Address X",
-        "phone": "918276234",
-        "email": "m@ua.pt"}]
+        "name": "Camera A",
+        "type": "Type X",
+        "building_id": 9}]
 
-def test_delete_company(test_db):
+def test_get_device_by_building_id(test_db):
     json={
-        "name": "Company A",
-        "address": "Address X",
-        "phone": "918276234",
-        "email": "m@ua.pt"}
+        "name": "Camera A",
+        "type": "Type X",
+        "building_id": 9}
 
     db = next(override_get_db())
-    company = Company(**json)
+    device = Device(**json)
+    try:
+        db.add(device)
+        db.commit()
+        db.refresh(device)
+    except SQLAlchemyError as e:
+        return str(e)
+    
+    id = 9
+    response = client.get(f"v1/device/?building_id={id}")
+    assert response.status_code == 200
+    assert response.json() == [{
+        "id": 1,
+        "name": "Camera A",
+        "type": "Type X",
+        "building_id": 9}]
+
+def test_delete_device(test_db):
+    json={
+        "name": "Camera A",
+        "type": "Type X",
+        "building_id": 9}
+
+    db = next(override_get_db())
+    company = Device(**json)
     try:
         db.add(company)
         db.commit()
@@ -128,7 +144,7 @@ def test_delete_company(test_db):
         return str(e)
 
     id=1
-    response = client.delete(f"v1/company/{id}")
+    response = client.delete(f"v1/device/{id}")
     assert response.status_code == 200
     assert response.json() == {"deleted_rows": 1}
     
