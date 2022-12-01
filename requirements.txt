@@ -7,3 +7,4 @@ cryptography==38.0.1
 pydantic[email]
 loguru
 pytest
+python-dotenv

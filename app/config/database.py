@@ -1,8 +1,21 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
+import logging
+logging.basicConfig(level=logging.INFO)
 
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://user:password@mysql-db/seccom-cctv"
+load_dotenv()
+
+DB_URL = os.getenv("DB_URL")
+DB_USERNAME = os.getenv("DB_USERNAME")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+
+
+SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_URL}"
+
+logging.info(SQLALCHEMY_DATABASE_URL)
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
