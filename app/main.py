@@ -2,7 +2,6 @@ from app.utils.app_exceptions import AppExceptionCase
 from fastapi import FastAPI, Request, Header
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from jose import jwt
 
 
 from app.routers import company, building, device, manager
@@ -39,19 +38,6 @@ app.add_middleware(CORSMiddleware,
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
-# -------------------------------- Middleware -------------------------------- #
-@app.middleware("http")
-async def process_oidc_jwt(request: Request, call_next):
-    headers = dict(request.headers)
-
-    if "authorization" in headers:
-        encoded_jwt = headers["authorization"].split("Bearer ")[1]
-        payload = jwt.decode(encoded_jwt, key=None, algorithms=["RS256"], options={"verify_signature":False})
-        request.state.idp_id = payload["sub"]
-
-    response = await call_next(request)
-    return response
 
 # ------------------- root path -> redirect to swagger docs ------------------ #
 @app.get("/")
