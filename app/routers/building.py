@@ -3,13 +3,13 @@ from fastapi import APIRouter, Depends
 
 from app.services.building import BuildingService
 from app.schemas.building import Building, BuildingCreate
-
+from app.auth.auth_bearer import JWTBearer
 from app.utils.service_result import handle_result
-
 from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/building",
+    dependencies=[Depends(JWTBearer())],
     tags=["building"],
     responses={404: {"description": "Not found"}},
 )

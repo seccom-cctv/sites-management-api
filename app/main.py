@@ -7,6 +7,7 @@ from jose import jwt
 
 from app.routers import company, building, device, manager
 from app.config.database import create_tables
+import app.config.settings as settings
 
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -18,6 +19,7 @@ from app.utils.request_exceptions import (
 from app.utils.app_exceptions import app_exception_handler
 
 app = FastAPI()
+settings.init() # this file stores global settings/params
 
 app.include_router(company.router)
 app.include_router(manager.router)
@@ -46,7 +48,7 @@ async def process_oidc_jwt(request: Request, call_next):
     if "authorization" in headers:
         encoded_jwt = headers["authorization"].split("Bearer ")[1]
         payload = jwt.decode(encoded_jwt, key=None, algorithms=["RS256"], options={"verify_signature":False})
-        print(payload)
+        request.state.idp_id = payload["sub"]
 
     response = await call_next(request)
     return response

@@ -4,13 +4,13 @@ from fastapi import APIRouter, Depends
 
 from app.services.device import DeviceService
 from app.schemas.device import Device, DeviceCreate
-
+from app.auth.auth_bearer import JWTBearer
 from app.utils.service_result import handle_result
-
 from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/device",
+    dependencies=[Depends(JWTBearer())],
     tags=["device"],
     responses={404: {"description": "Not found"}},
 )
