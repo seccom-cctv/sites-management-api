@@ -8,8 +8,8 @@ from app.utils.service_result import ServiceResult
 
 
 class DeviceService(AppService):
-    def get_device(self, id: int) -> ServiceResult:
-        result = DeviceCRUD(self.db).get_device(id)
+    def get_device(self, id: int, building_id: int) -> ServiceResult:
+        result = DeviceCRUD(self.db).get_device(id, building_id)
         if not isinstance(result, list):
             return ServiceResult(AppException.Get({"id_not_found": id}))
         #if not result.public:
@@ -36,10 +36,12 @@ class DeviceService(AppService):
 
 
 class DeviceCRUD(AppCRUD):
-    def get_device(self, id: int) -> List[Device]:
+    def get_device(self, id: int, building_id: int) -> List[Device]:
         if id:
             devices = self.db.query(Device).filter(Device.id == id).first()
             devices = [devices] # returns list
+        elif building_id:
+            devices = self.db.query(Device).filter(Device.building_id == building_id).all()
         else:
             devices = self.db.query(Device).all()
 

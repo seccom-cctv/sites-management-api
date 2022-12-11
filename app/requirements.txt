@@ -4,6 +4,6 @@ uvicorn==0.17.6
 SQLAlchemy==1.4.41 
 pymysql==1.0.2
 cryptography==38.0.1
-python-jose==3.3.0
 pydantic[email]
 loguru
+pytest

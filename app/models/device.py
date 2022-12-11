@@ -12,3 +12,6 @@ class Device(Base):
     building_id = Column(Integer, ForeignKey("buildings.id"))
 
     building = relationship("Building", back_populates="devices")
+
+    def __repr__(self):
+        return f"Device(id={self.id}, name={self.name}, type={self.type}, building_id={self.building_id})"

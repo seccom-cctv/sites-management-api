@@ -3,20 +3,20 @@ from fastapi import APIRouter, Depends
 
 from app.services.building import BuildingService
 from app.schemas.building import Building, BuildingCreate
-
+from app.auth.auth_bearer import JWTBearer
 from app.utils.service_result import handle_result
-
 from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/building",
+    dependencies=[Depends(JWTBearer())],
     tags=["building"],
     responses={404: {"description": "Not found"}},
 )
 
 @router.get("/", response_model=List[Building])
-async def get_building(id: Optional[int] = None, db: get_db = Depends()):
-    result = BuildingService(db).get_building(id)
+async def get_building(id: Optional[int] = None, company_id: Optional[int] = None, db: get_db = Depends()):
+    result = BuildingService(db).get_building(id, company_id)
     return handle_result(result)
 
 @router.post("/", response_model=Building)
