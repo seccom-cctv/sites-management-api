@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.config.database import Base, get_db
-from app.main import app
+from app.main_for_testing import app
 from app.models.device import Device
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"

@@ -62,9 +62,9 @@ class ManagerCRUD(AppCRUD):
         m = self.db.query(Manager).filter(Manager.id == id).one()
 
         if m:
-            m.idp_id = manager.idp_id,
-            m.permissions = manager.permissions,
-            m.preferences = manager.preferences,
+            m.idp_id = manager.idp_id
+            m.permissions = manager.permissions
+            m.preferences = manager.preferences
             m.company_id = manager.company_id
             self.db.commit()
             return m

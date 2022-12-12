@@ -6,8 +6,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.config.database import Base, get_db
-from app.main import app
+from app.main_for_testing import app
 from app.models.company import Company
+from fastapi import APIRouter, Depends
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -35,6 +36,9 @@ def test_db():
 
 app.dependency_overrides[get_db] = override_get_db
 
+
+# app.dependency_overrides[start_auth] = None
+
 client = TestClient(app)
 
 # Testing Routers
@@ -53,7 +57,9 @@ def test_post_a_company(test_db):
         "name": "Company A",
         "address": "Address X",
         "phone": "918276234",
-        "email": "m@ua.pt"}
+        "buildings":[],
+        "email": "m@ua.pt",
+        "managers":[]}
 
 def test_update_company(test_db):
     json={
@@ -83,7 +89,9 @@ def test_update_company(test_db):
         "name": "Company A",
         "address": "Address XYZ",
         "phone": "918276635",
-        "email": "m@ua.pt"}
+        "email": "m@ua.pt",
+        "managers":[],
+        "buildings":[]}
 
 def test_get_company(test_db):
     json={
@@ -109,7 +117,9 @@ def test_get_company(test_db):
         "name": "Company A",
         "address": "Address X",
         "phone": "918276234",
-        "email": "m@ua.pt"}]
+        "email": "m@ua.pt",
+        "managers":[],
+        "buildings":[]}]
 
 def test_delete_company(test_db):
     json={

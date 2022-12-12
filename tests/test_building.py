@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.config.database import Base, get_db
-from app.main import app
+from app.main_for_testing import app
 from app.models.building import Building
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
@@ -50,7 +50,7 @@ def test_post_a_building(test_db):
         "id": 1,
         "name": "Building X",
         "address": "Address X",
-        "company_id": 1}
+        "company_id": 1,"devices":[]}
 
 def test_get_building_by_id(test_db):
     json={
@@ -76,7 +76,8 @@ def test_get_building_by_id(test_db):
         "id": 1,
         "name": "Building X",
         "address": "Address X",
-        "company_id": 1}]
+        "company_id": 1,
+        "devices":[]}]
 
 def test_get_building_by_company_id(test_db):
     json={
@@ -102,7 +103,8 @@ def test_get_building_by_company_id(test_db):
         "id": 1,
         "name": "Building X",
         "address": "Address X",
-        "company_id": 1}]
+        "company_id": 1,
+        "devices":[]}]
 
 
 def test_update_building(test_db):
@@ -130,7 +132,8 @@ def test_update_building(test_db):
         "id": 1,
         "name": "Building Y",
         "address": "Address XYZ",
-        "company_id": 1
+        "company_id": 1,
+        "devices":[]
     }
 
 def test_delete_company(test_db):
