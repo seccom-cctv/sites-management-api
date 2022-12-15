@@ -1,4 +1,5 @@
 from typing import List
+from app.models.manager import Manager
 from app.schemas.building import BuildingCreate
 from app.utils.app_exceptions import AppException
 
@@ -6,14 +7,16 @@ from app.services.main import AppService, AppCRUD
 from app.models.building import Building
 from app.utils.service_result import ServiceResult
 
+import app.config.settings as settings
+from app.config.database import session
+
 
 class BuildingService(AppService):
     def get_building(self, id: int, company_id: int) -> ServiceResult:
         result = BuildingCRUD(self.db).get_building(id, company_id)
         if not isinstance(result, list):
             return ServiceResult(AppException.Get({"id_not_found": id}))
-        #if not result.public:
-            # return ServiceResult(AppException.RequiresAuth())
+
         return ServiceResult(result)
 
     def create_building(self, building: BuildingCreate) -> ServiceResult:
@@ -33,6 +36,14 @@ class BuildingService(AppService):
         if result == 0:
             return ServiceResult(AppException.Delete({"deleted_rows": result}))
         return ServiceResult({"deleted_rows": result})
+
+    def get_manager_buildings(self) -> ServiceResult:
+        result = BuildingCRUD(self.db).get_manager_buildings()
+        if not isinstance(result, list):
+            return ServiceResult(AppException.Get({"id_not_found": id}))
+        #if not result.public:
+            # return ServiceResult(AppException.RequiresAuth())
+        return ServiceResult(result)
 
 
 class BuildingCRUD(AppCRUD):
@@ -75,3 +86,10 @@ class BuildingCRUD(AppCRUD):
         result = self.db.query(Building).filter(Building.id == id).delete()
         self.db.commit()
         return result
+
+    def get_manager_buildings(self) -> List[Building]:
+        manager_idp_id =  settings.request_payload["sub"]
+        manager = session.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+        buildings = manager.company.buildings
+
+        return buildings

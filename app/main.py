@@ -17,6 +17,8 @@ from app.utils.request_exceptions import (
 )
 from app.utils.app_exceptions import app_exception_handler
 
+# -------------------------------- Finished imports ------------------------------- #
+
 app = FastAPI()
 settings.init() # this file stores global settings/params
 
@@ -28,6 +30,7 @@ app.include_router(device.router)
 @app.on_event("startup") # THIS IS VERY IMPORTANT! If we run create_tables outside this def pytest will not work!
 async def startup_event():
     create_tables()
+
 
 # ----------------------------- add CORS headers ----------------------------- #
 origins = ["*"] # "*" -> all origins
