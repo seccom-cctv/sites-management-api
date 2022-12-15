@@ -1,21 +1,22 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends
+from starlette.requests import Request
 
 from app.services.company import CompanyService
 from app.schemas.company import Company, CompanyCreate
-
+from app.auth.auth_bearer import JWTBearer
 from app.utils.service_result import handle_result
-
 from app.config.database import get_db
 
 router = APIRouter(
     prefix="/v1/company",
+    dependencies=[Depends(JWTBearer())],
     tags=["company"],
     responses={404: {"description": "Not found"}},
 )
 
 @router.get("/", response_model=List[Company])
-async def get_company(id: Optional[int] = None, db: get_db = Depends()):
+async def get_company(request: Request, id: Optional[int] = None, db: get_db = Depends()):
     result = CompanyService(db).get_company(id)
     return handle_result(result)
 
