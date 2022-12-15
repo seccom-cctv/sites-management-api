@@ -34,3 +34,8 @@ async def update_device(id: int, device: DeviceCreate, db: get_db = Depends()):
 async def delete_device(id: int, db: get_db = Depends()):
     result = DeviceService(db).delete_device(id)
     return handle_result(result)
+
+@router.get("/building_devices", response_model=List[Device])
+async def get_building_devices(building_id: int, db: get_db = Depends()):
+    result = DeviceService(db).get_building_devices(building_id)
+    return handle_result(result)
