@@ -47,12 +47,9 @@ class ManagerCRUD(AppCRUD):
 
     def create_manager(self, manager: ManagerCreate) -> Manager:
         manager = Manager(
-                    name = manager.name,
-                    phone = manager.phone,
-                    email = manager.email,
+                    idp_id = manager.idp_id,
                     permissions = manager.permissions,
                     preferences = manager.preferences,
-                    hashed_password = manager.hashed_password,
                     company_id = manager.company_id
                     )
 
@@ -65,12 +62,9 @@ class ManagerCRUD(AppCRUD):
         m = self.db.query(Manager).filter(Manager.id == id).one()
 
         if m:
-            m.name = manager.name,
-            m.phone = manager.phone,
-            m.email = manager.email,
+            m.idp_id = manager.idp_id,
             m.permissions = manager.permissions,
             m.preferences = manager.preferences,
-            m.hashed_password = manager.hashed_password,
             m.company_id = manager.company_id
             self.db.commit()
             return m

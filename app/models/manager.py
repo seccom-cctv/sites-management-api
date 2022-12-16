@@ -8,12 +8,9 @@ class Manager(Base):
     __tablename__ = "managers"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), unique=False, index=True)
-    phone = Column(String(30), unique=True, index=False)
-    email = Column(String(255), unique=True, index=False)
-    hashed_password = Column(String(255))
+    idp_id = Column(String(255), unique=True, index=True)
     preferences = Column(JSONEncodedDict(), default={"notifications": {"from": ["alarms", "cameras"], "to": ["email", "sms"]}})
-    permissions = Column(Integer, default=0)
+    permissions = Column(Integer, default=0) # 0 = client; 4 = superadmin
     company_id = Column(Integer, ForeignKey("companies.id"))
 
     company = relationship("Company", back_populates="managers")

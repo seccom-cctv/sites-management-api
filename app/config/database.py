@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
 SQLALCHEMY_DATABASE_URL = "mysql+pymysql://admin:password@seccom-sites-management-api-db.cbaqajvda2bv.us-east-1.rds.amazonaws.com:3306/sites_management_db"
 
@@ -15,8 +15,10 @@ SessionLocal = sessionmaker(
     bind=engine,
 )
 
-Base = declarative_base()
+# Session object are used to create a connection to the database and execute queries
+session = Session(bind=engine)
 
+Base = declarative_base()
 
 def get_db():
     db = SessionLocal()
