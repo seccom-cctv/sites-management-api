@@ -7,6 +7,7 @@ from app.models.company import Company
 from app.utils.service_result import ServiceResult
 from typing import List
 
+from app.utils.aux_functions import is_admin
 
 class CompanyService(AppService):
     def get_company(self, id: int) -> ServiceResult:
@@ -38,6 +39,9 @@ class CompanyService(AppService):
 
 class CompanyCRUD(AppCRUD):
     def get_company(self, id: int) -> List[Company]:
+        if not is_admin():
+            return None
+
         if id:
             companies = self.db.query(Company).filter(Company.id == id).first()
             companies = [companies] # returns list
@@ -47,6 +51,9 @@ class CompanyCRUD(AppCRUD):
         return companies
 
     def create_company(self, company: CompanyCreate) -> Company:
+        if not is_admin():
+            return None
+
         company = Company(
                     name = company.name,
                     address = company.address,
@@ -63,6 +70,9 @@ class CompanyCRUD(AppCRUD):
         return company
 
     def update_company(self, id: int, company: CompanyCreate) -> Company:
+        if not is_admin():
+            return None
+
         try:
             c = self.db.query(Company).filter(Company.id == id).one()
             c.name = company.name,
@@ -76,6 +86,9 @@ class CompanyCRUD(AppCRUD):
         return c
 
     def delete_company(self, id: int) -> int:
+        if not is_admin():
+            return None
+
         result = self.db.query(Company).filter(Company.id == id).delete()
         self.db.commit()
         return result
