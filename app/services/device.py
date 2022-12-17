@@ -1,6 +1,4 @@
 from typing import List
-from app.config.database import session
-from app.models.building import Building
 from app.models.manager import Manager
 from app.schemas.device import DeviceCreate
 from app.utils.app_exceptions import AppException
@@ -9,7 +7,11 @@ from app.services.main import AppService, AppCRUD
 from app.models.device import Device
 from app.utils.service_result import ServiceResult
 
+from sqlalchemy.orm import Session
+from app.config.database import engine
+
 import app.config.settings as settings
+from app.utils.aux_functions import is_admin, is_manager
 
 
 class DeviceService(AppService):
@@ -48,17 +50,23 @@ class DeviceService(AppService):
 
 class DeviceCRUD(AppCRUD):
     def get_device(self, id: int, building_id: int) -> List[Device]:
+        if not (is_manager(id) or is_admin()):
+            return None
+
         if id:
             devices = self.db.query(Device).filter(Device.id == id).first()
             devices = [devices] # returns list
         elif building_id:
             devices = self.db.query(Device).filter(Device.building_id == building_id).all()
-        else:
+        elif is_admin():
             devices = self.db.query(Device).all()
 
         return devices
 
     def create_device(self, device: DeviceCreate) -> Device:
+        if not (is_manager(id) or is_admin()):
+            return None
+
         device = Device(
                     name = device.name,
                     type = device.type,
@@ -71,6 +79,9 @@ class DeviceCRUD(AppCRUD):
         return device
 
     def update_device(self, id: int, device: DeviceCreate) -> Device:
+        if not (is_manager(id) or is_admin()):
+            return None
+
         d = self.db.query(Device).filter(Device.id == id).one()
 
         if d:
@@ -83,11 +94,15 @@ class DeviceCRUD(AppCRUD):
         return None
 
     def delete_device(self, id: int) -> int:
+        if not (is_manager(id) or is_admin()):
+            return None
+
         result = self.db.query(Device).filter(Device.id == id).delete()
         self.db.commit()
         return result
 
     def get_building_devices(self, building_id) -> List[Device]:
+        session = Session(bind=engine)
         manager_idp_id =  settings.request_payload["sub"]
         manager = session.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
         building = list(filter(lambda b: b.id == building_id, manager.company.buildings))
