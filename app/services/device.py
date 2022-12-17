@@ -7,9 +7,6 @@ from app.services.main import AppService, AppCRUD
 from app.models.device import Device
 from app.utils.service_result import ServiceResult
 
-from sqlalchemy.orm import Session
-from app.config.database import engine
-
 import app.config.settings as settings
 from app.utils.aux_functions import is_admin, is_manager
 
@@ -102,14 +99,13 @@ class DeviceCRUD(AppCRUD):
         return result
 
     def get_building_devices(self, building_id) -> List[Device]:
-        session = Session(bind=engine)
         manager_idp_id =  settings.request_payload["sub"]
-        manager = session.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+        manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
         building = list(filter(lambda b: b.id == building_id, manager.company.buildings))
         is_manager_of_building = True if len(building) else False
         
         if is_manager_of_building:
-            devices = session.query(Device).filter(Device.building_id == building_id).all()
+            devices = self.db.query(Device).filter(Device.building_id == building_id).all()
             return devices
         
         return None
