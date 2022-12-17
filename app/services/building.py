@@ -8,8 +8,6 @@ from app.models.building import Building
 from app.utils.service_result import ServiceResult
 
 import app.config.settings as settings
-from sqlalchemy.orm import Session
-from app.config.database import engine
 from app.utils.aux_functions import is_admin, is_manager
 
 
@@ -42,7 +40,7 @@ class BuildingService(AppService):
     def get_manager_buildings(self) -> ServiceResult:
         result = BuildingCRUD(self.db).get_manager_buildings()
         if not isinstance(result, list):
-            return ServiceResult(AppException.Get({"id_not_found": id}))
+            return ServiceResult(AppException.Get({"error": "manager has no associated buildings"}))
         #if not result.public:
             # return ServiceResult(AppException.RequiresAuth())
         return ServiceResult(result)
@@ -102,9 +100,8 @@ class BuildingCRUD(AppCRUD):
         return result
 
     def get_manager_buildings(self) -> List[Building]:
-        session = Session(bind=engine)
         manager_idp_id =  settings.request_payload["sub"]
-        manager = session.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+        manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
         buildings = manager.company.buildings
 
         return buildings
