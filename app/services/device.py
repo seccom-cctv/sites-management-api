@@ -47,21 +47,24 @@ class DeviceService(AppService):
 
 class DeviceCRUD(AppCRUD):
     def get_device(self, id: int, building_id: int) -> List[Device]:
-        if not (is_manager(id) or is_admin()):
-            return None
-
         if id:
             devices = self.db.query(Device).filter(Device.id == id).first()
             devices = [devices] # returns list
-        elif building_id:
+
+            if not (is_manager(devices[0].building_id) or is_admin()):
+                return None
+
+        elif building_id and (is_manager(building_id) or is_admin()):
             devices = self.db.query(Device).filter(Device.building_id == building_id).all()
         elif is_admin():
             devices = self.db.query(Device).all()
+        else:
+            return None
 
         return devices
 
     def create_device(self, device: DeviceCreate) -> Device:
-        if not (is_manager(id) or is_admin()):
+        if not (is_manager(device.building_id) or is_admin()):
             return None
 
         device = Device(
@@ -76,7 +79,9 @@ class DeviceCRUD(AppCRUD):
         return device
 
     def update_device(self, id: int, device: DeviceCreate) -> Device:
-        if not (is_manager(id) or is_admin()):
+        query_device = self.db.query(Device).filter(Device.id == id).first()
+
+        if not ((is_manager(query_device.building_id) and is_manager(device.building_id)) or is_admin()):
             return None
 
         d = self.db.query(Device).filter(Device.id == id).one()
@@ -91,12 +96,14 @@ class DeviceCRUD(AppCRUD):
         return None
 
     def delete_device(self, id: int) -> int:
-        if not (is_manager(id) or is_admin()):
+        device = self.db.query(Device).filter(Device.id == id).first()
+
+        if not (is_manager(device.building_id) or is_admin()):
             return None
 
-        result = self.db.query(Device).filter(Device.id == id).delete()
+        self.db.query(Device).filter(Device.id == id).delete()
         self.db.commit()
-        return result
+        return device
 
     def get_building_devices(self, building_id) -> List[Device]:
         manager_idp_id =  settings.request_payload["sub"]
