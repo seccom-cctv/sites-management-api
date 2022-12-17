@@ -72,7 +72,7 @@ class BuildingCRUD(AppCRUD):
         return buildings
 
     def create_building(self, building: BuildingCreate) -> Building:
-        if not self.is_valid_building(self, building):
+        if not self.is_valid_building(building):
             return f"unauthorized company_id: {building.company_id}"
 
         building = Building(
@@ -90,7 +90,7 @@ class BuildingCRUD(AppCRUD):
         if not (is_manager(id) or is_admin()):
             return None
 
-        if not self.is_valid_building(self, building):
+        if not self.is_valid_building(building):
             return f"unauthorized company_id: {building.company_id}"
 
         b = self.db.query(Building).filter(Building.id == id).one()
