@@ -8,7 +8,9 @@ from app.models.building import Building
 from app.utils.service_result import ServiceResult
 
 import app.config.settings as settings
-from app.config.database import session
+from sqlalchemy.orm import Session
+from app.config.database import engine
+from app.utils.aux_functions import is_admin, is_manager
 
 
 class BuildingService(AppService):
@@ -48,17 +50,23 @@ class BuildingService(AppService):
 
 class BuildingCRUD(AppCRUD):
     def get_building(self, id: int, company_id: int) -> List[Building]:
+        if not (is_manager(id) or is_admin()):
+            return None
+
         if id:
             buildings = self.db.query(Building).filter(Building.id == id).first()
             buildings = [buildings] # returns list
         elif company_id:
             buildings = self.db.query(Building).filter(Building.company_id == company_id).all()
-        else:
+        elif is_admin():
             buildings = self.db.query(Building).all()
 
         return buildings
 
     def create_building(self, building: BuildingCreate) -> Building:
+        if not (is_manager(id) or is_admin()):
+            return None
+
         building = Building(
                     name = building.name,
                     address = building.address,
@@ -71,6 +79,9 @@ class BuildingCRUD(AppCRUD):
         return building
 
     def update_building(self, id: int, building: BuildingCreate) -> Building:
+        if not (is_manager(id) or is_admin()):
+            return None
+
         b = self.db.query(Building).filter(Building.id == id).one()
 
         if b:
@@ -83,11 +94,15 @@ class BuildingCRUD(AppCRUD):
         return None
 
     def delete_building(self, id: int) -> int:
+        if not (is_manager(id) or is_admin()):
+            return None
+
         result = self.db.query(Building).filter(Building.id == id).delete()
         self.db.commit()
         return result
 
     def get_manager_buildings(self) -> List[Building]:
+        session = Session(bind=engine)
         manager_idp_id =  settings.request_payload["sub"]
         manager = session.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
         buildings = manager.company.buildings
