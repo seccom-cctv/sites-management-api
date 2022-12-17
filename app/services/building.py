@@ -10,7 +10,6 @@ from app.utils.service_result import ServiceResult
 import app.config.settings as settings
 from app.utils.aux_functions import is_admin, is_manager
 
-
 class BuildingService(AppService):
     def get_building(self, id: int, company_id: int) -> ServiceResult:
         result = BuildingCRUD(self.db).get_building(id, company_id)
@@ -47,6 +46,17 @@ class BuildingService(AppService):
 
 
 class BuildingCRUD(AppCRUD):
+    # ------------------------------- Aux function ------------------------------- #
+    def is_valid_building(self, building):
+        manager_idp_id =  settings.request_payload["sub"]
+        manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+
+        if building.company_id != manager.company_id and not is_admin():
+            return False
+    
+        return True
+
+
     def get_building(self, id: int, company_id: int) -> List[Building]:
         if not (is_manager(id) or is_admin()):
             return None
@@ -62,8 +72,8 @@ class BuildingCRUD(AppCRUD):
         return buildings
 
     def create_building(self, building: BuildingCreate) -> Building:
-        if not (is_manager(id) or is_admin()):
-            return None
+        if not self.is_valid_building(self, building):
+            return f"unauthorized company_id: {building.company_id}"
 
         building = Building(
                     name = building.name,
@@ -79,6 +89,9 @@ class BuildingCRUD(AppCRUD):
     def update_building(self, id: int, building: BuildingCreate) -> Building:
         if not (is_manager(id) or is_admin()):
             return None
+
+        if not self.is_valid_building(self, building):
+            return f"unauthorized company_id: {building.company_id}"
 
         b = self.db.query(Building).filter(Building.id == id).one()
 
