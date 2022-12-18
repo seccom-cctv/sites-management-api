@@ -41,7 +41,10 @@ async def startup_event():
     # --------------------------- Add a superadmin user to db --------------------------- #
     try:
         company = Company(name = "seccom", address = "", phone = "")
+        # client-web-ui cognito pool root user
         manager = Manager(idp_id = "f1034b00-29db-4004-acce-6b05ff1fbbb9", permissions = 4, company_id = 1)
+        # management-web-ui cognito pool root user
+        manager = Manager(idp_id = "cc95799c-4ace-4c10-a1a2-46ff9cf15b2e", permissions = 4, company_id = 1)
 
         session.add(company)
         session.commit()
