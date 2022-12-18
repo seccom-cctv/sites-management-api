@@ -1,14 +1,14 @@
 from typing import List
-from app.models.manager import Manager
-from app.schemas.building import BuildingCreate
-from app.utils.app_exceptions import AppException
+from models.manager import Manager
+from schemas.building import BuildingCreate
+from utils.app_exceptions import AppException
 
-from app.services.main import AppService, AppCRUD
-from app.models.building import Building
-from app.utils.service_result import ServiceResult
+from services.main import AppService, AppCRUD
+from models.building import Building
+from utils.service_result import ServiceResult
 
-import app.config.settings as settings
-from app.utils.aux_functions import is_admin, is_manager
+import config.settings as settings
+from utils.aux_functions import is_admin, is_manager
 
 class BuildingService(AppService):
     def get_building(self, id: int, company_id: int) -> ServiceResult:

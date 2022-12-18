@@ -4,7 +4,7 @@ services:
   sites_management_api:
     build:
       context: .
-      dockerfile: app/Dockerfile
+      dockerfile: Dockerfile
     container_name: sites-management-api
     volumes:
       - '.:/sites-management-api'

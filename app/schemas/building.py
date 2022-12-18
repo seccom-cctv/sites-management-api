@@ -1,6 +1,6 @@
 from typing_extensions import Annotated
 from pydantic import BaseModel, Field
-from app.schemas.device import Device
+from schemas.device import Device
 
 class BuildingBase(BaseModel):
     name: Annotated[str, Field(max_length=255)]

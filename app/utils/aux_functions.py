@@ -1,6 +1,6 @@
-from app.models.manager import Manager
-import app.config.settings as settings
-from app.config.database import session
+from models.manager import Manager
+import config.settings as settings
+from config.database import session
 
 
 # ---------------------------------------------------------------------------- #

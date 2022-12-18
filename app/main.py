@@ -1,26 +1,26 @@
 import sqlalchemy
 
-from app.utils.app_exceptions import AppExceptionCase
+from utils.app_exceptions import AppExceptionCase
 from fastapi import FastAPI, Request, Header
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 
-from app.routers import company, building, device, manager
-from app.config.database import create_tables
-import app.config.settings as settings
+from routers import company, building, device, manager
+from config.database import create_tables
+import config.settings as settings
 
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app.utils.request_exceptions import (
+from utils.request_exceptions import (
     http_exception_handler,
     request_validation_exception_handler,
 )
-from app.utils.app_exceptions import app_exception_handler
-from app.config.database import session
-from app.models.company import Company
-from app.models.manager import Manager
+from utils.app_exceptions import app_exception_handler
+from config.database import session
+from models.company import Company
+from models.manager import Manager
 
 
 # -------------------------------- Finished imports ------------------------------- #

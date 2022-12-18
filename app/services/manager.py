@@ -1,12 +1,12 @@
 from typing import List
-from app.schemas.manager import ManagerCreate
-from app.utils.app_exceptions import AppException
+from schemas.manager import ManagerCreate
+from utils.app_exceptions import AppException
 
-from app.services.main import AppService, AppCRUD
-from app.models.manager import Manager
-from app.utils.service_result import ServiceResult
+from services.main import AppService, AppCRUD
+from models.manager import Manager
+from utils.service_result import ServiceResult
 
-from app.utils.aux_functions import is_admin
+from utils.aux_functions import is_admin
 
 class ManagerService(AppService):
     def get_manager(self, id: int) -> ServiceResult:

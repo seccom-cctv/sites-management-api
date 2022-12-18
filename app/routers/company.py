@@ -2,11 +2,11 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends
 from starlette.requests import Request
 
-from app.services.company import CompanyService
-from app.schemas.company import Company, CompanyCreate
-from app.auth.auth_bearer import JWTBearer
-from app.utils.service_result import handle_result
-from app.config.database import get_db
+from services.company import CompanyService
+from schemas.company import Company, CompanyCreate
+from auth.auth_bearer import JWTBearer
+from utils.service_result import handle_result
+from config.database import get_db
 
 router = APIRouter(
     prefix="/v1/company",

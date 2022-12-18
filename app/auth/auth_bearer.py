@@ -1,5 +1,5 @@
 import traceback
-import app.config.settings as settings
+import config.settings as settings
 
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials

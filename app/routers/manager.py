@@ -1,11 +1,11 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends
 
-from app.services.manager import ManagerService
-from app.schemas.manager import Manager, ManagerCreate
-from app.auth.auth_bearer import JWTBearer
-from app.utils.service_result import handle_result
-from app.config.database import get_db
+from services.manager import ManagerService
+from schemas.manager import Manager, ManagerCreate
+from auth.auth_bearer import JWTBearer
+from utils.service_result import handle_result
+from config.database import get_db
 
 router = APIRouter(
     prefix="/v1/manager",
