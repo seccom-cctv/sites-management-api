@@ -40,8 +40,7 @@ class BuildingService(AppService):
         result = BuildingCRUD(self.db).get_manager_buildings()
         if not isinstance(result, list):
             return ServiceResult(AppException.Get({"error": "manager has no associated buildings"}))
-        #if not result.public:
-            # return ServiceResult(AppException.RequiresAuth())
+
         return ServiceResult(result)
 
 
@@ -72,13 +71,18 @@ class BuildingCRUD(AppCRUD):
         return buildings
 
     def create_building(self, building: BuildingCreate) -> Building:
-        if not self.is_valid_building(building):
-            return f"unauthorized company_id: {building.company_id}"
+        manager_idp_id =  settings.request_payload["sub"]
+        manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+
+        if is_admin():
+            override_company_id = building.company_id
+        else:
+            override_company_id = manager.company_id
 
         building = Building(
                     name = building.name,
                     address = building.address,
-                    company_id = building.company_id,
+                    company_id = override_company_id,
                     )
 
         self.db.add(building)
@@ -87,18 +91,20 @@ class BuildingCRUD(AppCRUD):
         return building
 
     def update_building(self, id: int, building: BuildingCreate) -> Building:
-        if not (is_manager(id) or is_admin()):
-            return None
+        manager_idp_id =  settings.request_payload["sub"]
+        manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
 
-        if not self.is_valid_building(building):
-            return f"unauthorized company_id: {building.company_id}"
+        if is_admin():
+            override_company_id = building.company_id
+        else:
+            override_company_id = manager.company_id
 
         b = self.db.query(Building).filter(Building.id == id).one()
 
         if b:
             b.name = building.name,
             b.address = building.address,
-            b.company_id = building.company_id
+            b.company_id = override_company_id
             self.db.commit()
             return b
 
