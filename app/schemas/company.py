@@ -1,8 +1,8 @@
 from typing import Optional
 from typing_extensions import Annotated
 from pydantic import BaseModel, EmailStr, Field
-from app.schemas.manager import Manager
-from app.schemas.building import Building
+from schemas.manager import Manager
+from schemas.building import Building
 
 class CompanyBase(BaseModel):
     name: Annotated[str, Field(max_length=255)]

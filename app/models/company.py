@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from app.config.database import Base
+from config.database import Base
 
 class Company(Base):
     __tablename__ = "companies"

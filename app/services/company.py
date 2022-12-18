@@ -1,13 +1,13 @@
 from sqlalchemy.exc import SQLAlchemyError
-from app.schemas.company import CompanyCreate
-from app.utils.app_exceptions import AppException
+from schemas.company import CompanyCreate
+from utils.app_exceptions import AppException
 
-from app.services.main import AppService, AppCRUD
-from app.models.company import Company
-from app.utils.service_result import ServiceResult
+from services.main import AppService, AppCRUD
+from models.company import Company
+from utils.service_result import ServiceResult
 from typing import List
 
-from app.utils.aux_functions import is_admin
+from utils.aux_functions import is_admin
 
 class CompanyService(AppService):
     def get_company(self, id: int) -> ServiceResult:

@@ -1,14 +1,14 @@
 from typing import List
-from app.models.manager import Manager
-from app.schemas.device import DeviceCreate
-from app.utils.app_exceptions import AppException
+from models.manager import Manager
+from schemas.device import DeviceCreate
+from utils.app_exceptions import AppException
 
-from app.services.main import AppService, AppCRUD
-from app.models.device import Device
-from app.utils.service_result import ServiceResult
+from services.main import AppService, AppCRUD
+from models.device import Device
+from utils.service_result import ServiceResult
 
-import app.config.settings as settings
-from app.utils.aux_functions import is_admin, is_manager
+import config.settings as settings
+from utils.aux_functions import is_admin, is_manager
 
 
 class DeviceService(AppService):

@@ -1,11 +1,11 @@
 from typing import Optional, List
 from fastapi import APIRouter, Depends
 
-from app.services.building import BuildingService
-from app.schemas.building import Building, BuildingCreate
-from app.auth.auth_bearer import JWTBearer
-from app.utils.service_result import handle_result
-from app.config.database import get_db
+from services.building import BuildingService
+from schemas.building import Building, BuildingCreate
+from auth.auth_bearer import JWTBearer
+from utils.service_result import handle_result
+from config.database import get_db
 
 router = APIRouter(
     prefix="/v1/building",
