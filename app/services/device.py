@@ -1,4 +1,5 @@
 from typing import List
+from app.models.manager import Manager
 from app.schemas.device import DeviceCreate
 from app.utils.app_exceptions import AppException
 
@@ -6,14 +7,16 @@ from app.services.main import AppService, AppCRUD
 from app.models.device import Device
 from app.utils.service_result import ServiceResult
 
+import app.config.settings as settings
+from app.utils.aux_functions import is_admin, is_manager
+
 
 class DeviceService(AppService):
     def get_device(self, id: int, building_id: int) -> ServiceResult:
         result = DeviceCRUD(self.db).get_device(id, building_id)
         if not isinstance(result, list):
             return ServiceResult(AppException.Get({"id_not_found": id}))
-        #if not result.public:
-            # return ServiceResult(AppException.RequiresAuth())
+
         return ServiceResult(result)
 
     def create_device(self, device: DeviceCreate) -> ServiceResult:
@@ -34,20 +37,36 @@ class DeviceService(AppService):
             return ServiceResult(AppException.Delete({"deleted_rows": result}))
         return ServiceResult({"deleted_rows": result})
 
+    def get_building_devices(self, building_id: int) -> ServiceResult:
+        result = DeviceCRUD(self.db).get_building_devices(building_id)
+        if not isinstance(result, list):
+            return ServiceResult(AppException.Get({"error": f"Permission denied for building_id '{building_id}' or invalid building_id"}))
+
+        return ServiceResult(result)
+
 
 class DeviceCRUD(AppCRUD):
     def get_device(self, id: int, building_id: int) -> List[Device]:
         if id:
             devices = self.db.query(Device).filter(Device.id == id).first()
             devices = [devices] # returns list
-        elif building_id:
+
+            if not (is_manager(devices[0].building_id) or is_admin()):
+                return None
+
+        elif building_id and (is_manager(building_id) or is_admin()):
             devices = self.db.query(Device).filter(Device.building_id == building_id).all()
-        else:
+        elif is_admin():
             devices = self.db.query(Device).all()
+        else:
+            return None
 
         return devices
 
     def create_device(self, device: DeviceCreate) -> Device:
+        if not (is_manager(device.building_id) or is_admin()):
+            return None
+
         device = Device(
                     name = device.name,
                     type = device.type,
@@ -60,6 +79,11 @@ class DeviceCRUD(AppCRUD):
         return device
 
     def update_device(self, id: int, device: DeviceCreate) -> Device:
+        query_device = self.db.query(Device).filter(Device.id == id).first()
+
+        if not ((is_manager(query_device.building_id) and is_manager(device.building_id)) or is_admin()):
+            return None
+
         d = self.db.query(Device).filter(Device.id == id).one()
 
         if d:
@@ -72,6 +96,23 @@ class DeviceCRUD(AppCRUD):
         return None
 
     def delete_device(self, id: int) -> int:
-        result = self.db.query(Device).filter(Device.id == id).delete()
+        device = self.db.query(Device).filter(Device.id == id).first()
+
+        if not (is_manager(device.building_id) or is_admin()):
+            return None
+
+        self.db.query(Device).filter(Device.id == id).delete()
         self.db.commit()
-        return result
+        return device
+
+    def get_building_devices(self, building_id) -> List[Device]:
+        manager_idp_id =  settings.request_payload["sub"]
+        manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+        building = list(filter(lambda b: b.id == building_id, manager.company.buildings))
+        is_manager_of_building = True if len(building) else False
+        
+        if is_manager_of_building:
+            devices = self.db.query(Device).filter(Device.building_id == building_id).all()
+            return devices
+        
+        return None

@@ -6,6 +6,7 @@ from app.services.main import AppService, AppCRUD
 from app.models.manager import Manager
 from app.utils.service_result import ServiceResult
 
+from app.utils.aux_functions import is_admin
 
 class ManagerService(AppService):
     def get_manager(self, id: int) -> ServiceResult:
@@ -37,6 +38,9 @@ class ManagerService(AppService):
 
 class ManagerCRUD(AppCRUD):
     def get_manager(self, id: int) -> List[Manager]:
+        if not is_admin():
+            return None
+
         if id:
             managers = self.db.query(Manager).filter(Manager.id == id).first()
             managers = [managers] # returns list
@@ -46,6 +50,9 @@ class ManagerCRUD(AppCRUD):
         return managers
 
     def create_manager(self, manager: ManagerCreate) -> Manager:
+        if not is_admin():
+            return None
+
         manager = Manager(
                     idp_id = manager.idp_id,
                     permissions = manager.permissions,
@@ -59,6 +66,9 @@ class ManagerCRUD(AppCRUD):
         return manager
 
     def update_manager(self, id: int, manager: ManagerCreate) -> Manager:
+        if not is_admin():
+            return None
+
         m = self.db.query(Manager).filter(Manager.id == id).one()
 
         if m:
@@ -72,6 +82,9 @@ class ManagerCRUD(AppCRUD):
         return None
 
     def delete_manager(self, id: int) -> int:
+        if not is_admin():
+            return None
+
         result = self.db.query(Manager).filter(Manager.id == id).delete()
         self.db.commit()
         return result

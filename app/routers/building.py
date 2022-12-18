@@ -33,3 +33,8 @@ async def update_building(id: int, building: BuildingCreate, db: get_db = Depend
 async def delete_building(id: int, db: get_db = Depends()):
     result = BuildingService(db).delete_building(id)
     return handle_result(result)
+
+@router.get("/manager_buildings", response_model=List[Building])
+async def get_manager_building(db: get_db = Depends()):
+    result = BuildingService(db).get_manager_buildings()
+    return handle_result(result)

@@ -1,3 +1,5 @@
+import sqlalchemy
+
 from app.utils.app_exceptions import AppExceptionCase
 from fastapi import FastAPI, Request, Header
 from fastapi.responses import RedirectResponse
@@ -16,6 +18,12 @@ from app.utils.request_exceptions import (
     request_validation_exception_handler,
 )
 from app.utils.app_exceptions import app_exception_handler
+from app.config.database import session
+from app.models.company import Company
+from app.models.manager import Manager
+
+
+# -------------------------------- Finished imports ------------------------------- #
 
 app = FastAPI()
 settings.init() # this file stores global settings/params
@@ -27,7 +35,27 @@ app.include_router(device.router)
 
 @app.on_event("startup") # THIS IS VERY IMPORTANT! If we run create_tables outside this def pytest will not work!
 async def startup_event():
+    # ------------------------------- Create tables ------------------------------ #
     create_tables()
+
+    # --------------------------- Add a superadmin user to db --------------------------- #
+    try:
+        company = Company(name = "seccom", address = "", phone = "")
+        manager = Manager(idp_id = "f1034b00-29db-4004-acce-6b05ff1fbbb9", permissions = 4, company_id = 1)
+
+        session.add(company)
+        session.commit()
+        session.refresh(company)
+
+        session.add(manager)
+        session.commit()
+        session.refresh(manager)
+    except sqlalchemy.exc.IntegrityError as e:
+        print(e)
+        session.rollback()
+    # ---------------------------------------------------------------------------- #
+
+
 
 # ----------------------------- add CORS headers ----------------------------- #
 origins = ["*"] # "*" -> all origins
