@@ -42,17 +42,22 @@ async def startup_event():
     try:
         company = Company(name = "seccom", address = "", phone = "")
         # client-web-ui cognito pool root user
-        manager = Manager(idp_id = "f1034b00-29db-4004-acce-6b05ff1fbbb9", permissions = 4, company_id = 1)
+        manager_client_pool = Manager(idp_id = "f1034b00-29db-4004-acce-6b05ff1fbbb9", permissions = 4, company_id = 1)
         # management-web-ui cognito pool root user
-        manager = Manager(idp_id = "cc95799c-4ace-4c10-a1a2-46ff9cf15b2e", permissions = 4, company_id = 1)
+        manager_management_pool = Manager(idp_id = "cc95799c-4ace-4c10-a1a2-46ff9cf15b2e", permissions = 4, company_id = 1)
 
         session.add(company)
         session.commit()
         session.refresh(company)
 
-        session.add(manager)
+        session.add(manager_client_pool)
         session.commit()
-        session.refresh(manager)
+        session.refresh(manager_client_pool)
+
+        session.add(manager_management_pool)
+        session.commit()
+        session.refresh(manager_management_pool)
+
     except sqlalchemy.exc.IntegrityError as e:
         print(e)
         session.rollback()
