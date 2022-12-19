@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://admin:password1234@sites-api-db.cs10xruwdvyw.us-east-1.rds.amazonaws.com:3306/sites_db"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://admin:password1234@sites-db.cs10xruwdvyw.us-east-1.rds.amazonaws.com:3306/sites_db"
 #SQLALCHEMY_DATABASE_URL = "mysql+pymysql://user:password@localhost:9906/seccom-cctv"
 
 engine = create_engine(
