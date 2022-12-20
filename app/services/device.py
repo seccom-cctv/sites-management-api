@@ -46,8 +46,8 @@ class DeviceService(AppService):
 
         return ServiceResult(result)
 
-    def get_building_videos(self) -> ServiceResult:
-        result = DeviceCRUD(self.db).get_building_videos()
+    def get_building_videos(self, building_id: int) -> ServiceResult:
+        result = DeviceCRUD(self.db).get_building_videos(building_id)
         if not isinstance(result, list):
             return ServiceResult(AppException.Get({"error": f"Videos not available"}))
 
@@ -77,6 +77,7 @@ class DeviceCRUD(AppCRUD):
             return None
 
         device = Device(
+                    id = device.id,
                     name = device.name,
                     type = device.type,
                     building_id = device.building_id
@@ -96,6 +97,7 @@ class DeviceCRUD(AppCRUD):
         d = self.db.query(Device).filter(Device.id == id).one()
 
         if d:
+            d.id = device.id,
             d.name = device.name,
             d.type = device.type,
             d.building_id = device.building_id
@@ -114,7 +116,7 @@ class DeviceCRUD(AppCRUD):
         self.db.commit()
         return device
 
-    def get_building_devices(self, building_id) -> List[Device]:
+    def get_building_devices(self, building_id: int) -> List[Device]:
         manager_idp_id =  settings.request_payload["sub"]
         manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
         building = list(filter(lambda b: b.id == building_id, manager.company.buildings))
@@ -126,15 +128,15 @@ class DeviceCRUD(AppCRUD):
         
         return None
 
-    def get_building_videos(self) -> List:
+    def get_building_videos(self, building_id: int) -> List:
 
-        # Call the S3 client's list_objects function to get a list of objects in the bucket
+        devices = self.get_building_devices(building_id)
+        cameras = [f"camera_{device.id}" for device in devices]
+
+        # Call the S3 client's list_objects function to get a list of videos in the bucket
         objects = s3.list_objects(Bucket="seccom.video.store.1", Prefix="camera")
 
-        # Get a list of file names from the list of objects
-        file_names = [obj for obj in objects['Contents']]
+        # Get a list of file names from the list of objects if obj["key"] in cameras
+        videos = [obj for obj in objects['Contents'] if obj["Key"].split("-")[0] in cameras]
 
-        # Print the file names
-        print(file_names)
-
-        return file_names
+        return videos

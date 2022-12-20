@@ -41,6 +41,6 @@ async def get_building_devices(building_id: int, db: get_db = Depends()):
     return handle_result(result)
 
 @router.get("/building_videos", response_model=List)
-async def get_building_videos(db: get_db = Depends()):
-    result = DeviceService(db).get_building_videos()
+async def get_building_videos(building_id: int, db: get_db = Depends()):
+    result = DeviceService(db).get_building_videos(building_id)
     return handle_result(result)
