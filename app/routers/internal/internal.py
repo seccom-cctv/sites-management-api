@@ -12,7 +12,7 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/device_managers/{device_id}", response_model=List[Manager])
+@router.get("/device_managers/{device_id}", response_model=List)
 async def get_device_managers(device_id: int, db: get_db = Depends()):
     result = InternalService(db).get_device_managers(device_id)
     return handle_result(result)
