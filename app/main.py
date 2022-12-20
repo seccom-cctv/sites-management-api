@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 from routers import company, building, device, manager
+from routers.internal import internal
 from config.database import create_tables
 import config.settings as settings
 
@@ -32,6 +33,7 @@ app.include_router(company.router)
 app.include_router(manager.router)
 app.include_router(building.router)
 app.include_router(device.router)
+app.include_router(internal.router)
 
 @app.on_event("startup") # THIS IS VERY IMPORTANT! If we run create_tables outside this def pytest will not work!
 async def startup_event():
