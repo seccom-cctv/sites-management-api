@@ -10,6 +10,8 @@ from utils.service_result import ServiceResult
 import config.settings as settings
 from utils.aux_functions import is_admin, is_manager
 
+from .main import s3
+
 
 class DeviceService(AppService):
     def get_device(self, id: int, building_id: int) -> ServiceResult:
@@ -41,6 +43,13 @@ class DeviceService(AppService):
         result = DeviceCRUD(self.db).get_building_devices(building_id)
         if not isinstance(result, list):
             return ServiceResult(AppException.Get({"error": f"Permission denied for building_id '{building_id}' or invalid building_id"}))
+
+        return ServiceResult(result)
+
+    def get_building_videos(self) -> ServiceResult:
+        result = DeviceCRUD(self.db).get_building_videos()
+        if not isinstance(result, list):
+            return ServiceResult(AppException.Get({"error": f"Videos not available"}))
 
         return ServiceResult(result)
 
@@ -116,3 +125,16 @@ class DeviceCRUD(AppCRUD):
             return devices
         
         return None
+
+    def get_building_videos(self) -> List:
+
+        # Call the S3 client's list_objects function to get a list of objects in the bucket
+        objects = s3.list_objects(Bucket="seccom.video.store.1", Prefix="camera")
+
+        # Get a list of file names from the list of objects
+        file_names = [obj for obj in objects['Contents']]
+
+        # Print the file names
+        print(file_names)
+
+        return file_names

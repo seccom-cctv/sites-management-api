@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+#SQLALCHEMY_DATABASE_URL = "mysql+pymysql://user:password@mysql-db/seccom-cctv"
 #SQLALCHEMY_DATABASE_URL = "mysql+pymysql://user:password@localhost:9906/seccom-cctv"
 
 engine = create_engine(

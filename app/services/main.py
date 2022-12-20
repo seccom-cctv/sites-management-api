@@ -8,6 +8,8 @@ load_dotenv()
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 
+# Create an S3 client
+s3 = boto3.client('s3')
 
 # Create a AWS Cognito client in the 'eu-west-1' region
 cognito_client = boto3.client(
