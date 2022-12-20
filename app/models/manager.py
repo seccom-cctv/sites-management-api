@@ -9,7 +9,7 @@ class Manager(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     idp_id = Column(String(255), unique=True, index=True)
-    preferences = Column(JSONEncodedDict(), default={"notifications": {"from": ["alarms", "cameras"], "to": ["email", "sms"]}})
+    preferences = Column(String(255), default='{"notifications": {"from": ["alarms", "cameras"], "to": ["email", "sms"]}}')
     permissions = Column(Integer, default=0) # 0 = client; 4 = superadmin
     company_id = Column(Integer, ForeignKey("companies.id"))
 

@@ -40,15 +40,16 @@ class ManagerService(AppService):
 class ManagerCRUD(AppCRUD):
     def get_manager(self, id: int) -> List[Manager]:
         manager_idp_id =  settings.request_payload["sub"]
-        manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+        request_manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
 
-        if not (manager.id == id or is_admin()):
-            return None
-
-        if id:
-            managers = [manager] # returns list
-        elif is_admin():
-            managers = self.db.query(Manager).all()
+        if is_admin():
+            if id:
+                manager = self.db.query(Manager).filter(Manager.id == id).first()
+                managers = [manager] # returns list
+            else:
+                managers = self.db.query(Manager).all()
+        else:
+            managers = [request_manager] # returns list
 
         return managers
 
@@ -72,9 +73,10 @@ class ManagerCRUD(AppCRUD):
         manager_idp_id =  settings.request_payload["sub"]
         request_manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
 
-        if is_admin():
-            pass
-        else:
+        if id == None:
+            id = request_manager.id
+
+        if not is_admin():
             '''If manager is not admin Only allows him to update the preferences. Every other attribute remains the same'''
             request_manager.preferences = manager.preferences
             id = request_manager.id
@@ -88,7 +90,6 @@ class ManagerCRUD(AppCRUD):
             m.preferences = manager.preferences,
             m.company_id = manager.company_id
             self.db.commit()
-            self.db.refresh(manager)
             return m
 
         return None
