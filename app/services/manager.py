@@ -6,7 +6,8 @@ from services.main import AppService, AppCRUD
 from models.manager import Manager
 from utils.service_result import ServiceResult
 
-from utils.aux_functions import is_admin
+import config.settings as settings
+from utils.aux_functions import is_admin, is_manager
 
 class ManagerService(AppService):
     def get_manager(self, id: int) -> ServiceResult:
@@ -38,13 +39,15 @@ class ManagerService(AppService):
 
 class ManagerCRUD(AppCRUD):
     def get_manager(self, id: int) -> List[Manager]:
-        if not is_admin():
+        manager_idp_id =  settings.request_payload["sub"]
+        manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+
+        if not (manager.id == id or is_admin()):
             return None
 
         if id:
-            managers = self.db.query(Manager).filter(Manager.id == id).first()
-            managers = [managers] # returns list
-        else:
+            managers = [manager] # returns list
+        elif is_admin():
             managers = self.db.query(Manager).all()
 
         return managers
@@ -66,8 +69,19 @@ class ManagerCRUD(AppCRUD):
         return manager
 
     def update_manager(self, id: int, manager: ManagerCreate) -> Manager:
-        if not is_admin():
+        manager_idp_id =  settings.request_payload["sub"]
+        request_manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
+
+        if not (request_manager.id == id or is_admin()):
             return None
+
+        if is_admin():
+            pass
+        else:
+            '''If manager is not admin Only allows him to update the preferences. Every other attribute remains the same'''
+            request_manager.preferences = manager.preferences
+            manager = request_manager
+            
 
         m = self.db.query(Manager).filter(Manager.id == id).one()
 
