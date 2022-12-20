@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 from routers import company, building, device, manager
+from routers.internal import internal
 from config.database import create_tables
 import config.settings as settings
 
@@ -32,6 +33,7 @@ app.include_router(company.router)
 app.include_router(manager.router)
 app.include_router(building.router)
 app.include_router(device.router)
+app.include_router(internal.router)
 
 @app.on_event("startup") # THIS IS VERY IMPORTANT! If we run create_tables outside this def pytest will not work!
 async def startup_event():
@@ -43,9 +45,9 @@ async def startup_event():
         
         company = Company(name = "seccom", address = "", phone = "")
         # client-web-ui cognito pool root user
-        manager_client_pool = Manager(idp_id = "f1034b00-29db-4004-acce-6b05ff1fbbb9", permissions = 4, company_id = 1)
+        manager_client_pool = Manager(idp_id = "b99373ce-d903-4c9a-a0ab-ee192ca89731", permissions = 4, company_id = 1)
         # management-web-ui cognito pool root user
-        manager_management_pool = Manager(idp_id = "cc95799c-4ace-4c10-a1a2-46ff9cf15b2e", permissions = 4, company_id = 1)
+        manager_management_pool = Manager(idp_id = "75e1c506-86a9-44f7-8684-4ccc9c7a480a", permissions = 4, company_id = 1)
 
         session.add(company)
         session.commit()

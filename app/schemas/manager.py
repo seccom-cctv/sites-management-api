@@ -4,7 +4,7 @@ from typing_extensions import Annotated
 
 class ManagerBase(BaseModel):
     idp_id: str
-    preferences: Optional[dict]
+    preferences: Optional[str]
     permissions: Optional[int]
     company_id: int
 

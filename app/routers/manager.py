@@ -24,8 +24,8 @@ async def create_manager(manager: ManagerCreate, db: get_db = Depends()):
     result = ManagerService(db).create_manager(manager)
     return handle_result(result)
 
-@router.put("/{id}", response_model=Manager)
-async def update_manager(id: int, manager: ManagerCreate, db: get_db = Depends()):
+@router.put("/", response_model=Manager)
+async def update_manager(manager: ManagerCreate, id: Optional[int] = None, db: get_db = Depends()):
     result = ManagerService(db).update_manager(id, manager)
     return handle_result(result)
 

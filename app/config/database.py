@@ -1,8 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+import os
+from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://admin:password1234@sma-db.cgugp201zgzj.eu-west-3.rds.amazonaws.com:3306/sites_db"
+load_dotenv()
+
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 #SQLALCHEMY_DATABASE_URL = "mysql+pymysql://user:password@localhost:9906/seccom-cctv"
 
 engine = create_engine(
