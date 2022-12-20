@@ -4,6 +4,7 @@ from datetime import datetime
 
 
 class DeviceBase(BaseModel):
+    id: int
     name: Annotated[str, Field(max_length=255)]
     type: Annotated[str, Field(max_length=255)]
     building_id: int
@@ -14,7 +15,6 @@ class DeviceCreate(DeviceBase):
 
 
 class Device(DeviceBase):
-    id: int
     created_at: datetime
 
     class Config:
