@@ -72,16 +72,13 @@ class ManagerCRUD(AppCRUD):
         manager_idp_id =  settings.request_payload["sub"]
         request_manager = self.db.query(Manager).filter(Manager.idp_id == manager_idp_id).first()
 
-        if not (request_manager.id == id or is_admin()):
-            return None
-
         if is_admin():
             pass
         else:
             '''If manager is not admin Only allows him to update the preferences. Every other attribute remains the same'''
             request_manager.preferences = manager.preferences
+            id = request_manager.id
             manager = request_manager
-            
 
         m = self.db.query(Manager).filter(Manager.id == id).one()
 
@@ -91,6 +88,7 @@ class ManagerCRUD(AppCRUD):
             m.preferences = manager.preferences,
             m.company_id = manager.company_id
             self.db.commit()
+            self.db.refresh(manager)
             return m
 
         return None
